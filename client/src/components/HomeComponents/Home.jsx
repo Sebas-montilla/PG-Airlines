@@ -94,7 +94,7 @@ export default function Home() {
               </div>
             </div>
             <Footer />
-            {/* <div className={s.whatsapp}>
+            <div className={s.whatsapp}>
               <Button
                 id="whatsapp"
                 href="https://walink.co/000b86"
@@ -105,7 +105,7 @@ export default function Home() {
                 <WhatsAppIcon></WhatsAppIcon>
                 <p>Chat</p>
               </Button>
-            </div> */}
+            </div>
           </div>
         </div>
       ) : (

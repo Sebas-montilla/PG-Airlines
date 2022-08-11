@@ -29,9 +29,9 @@ export default function Footer() {
             </p>
           </li>
           <li>
-            <p className={s.p1}>
+            <a href="https://github.com/Sebas-montilla/PG-Airlines.git" target="_blank"><p className={s.p1}>
               GitHub <i id="gitHubIcon" className="bx bxl-github"></i>
-            </p>
+            </p></a>
           </li> 
           <li>
             <p className={s.p1}></p>
