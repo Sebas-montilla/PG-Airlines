@@ -216,7 +216,7 @@ export async function ejecutar() {
         admin: false,
         photo: img,
         uid: uid,
-        empresa:false,
+        // empresa:false,
         superAdmin: false,
         emailVerificated:true,
         disable:false
