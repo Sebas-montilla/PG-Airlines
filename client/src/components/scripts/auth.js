@@ -209,8 +209,8 @@ export async function ejecutar() {
 
     let hay = await dbFirebase.collection("users").doc(email).get();
     if (!hay.data()) {
-      let emailVerificated=true
-      await store.dispatch(createUser({ email, name, uid, img ,emailVerificated}));
+      let emailVerified=true
+      await store.dispatch(createUser({ email, name, uid, img ,emailVerified}));
       return dbFirebase.collection("users").doc(email).set({
         email: email,
         admin: false,

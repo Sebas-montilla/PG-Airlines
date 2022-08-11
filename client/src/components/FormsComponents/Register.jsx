@@ -94,7 +94,7 @@ function Register() {
       setLoading(false);
 
       navigate.replace("/");
-      window.location.reload();
+     window.location.reload()
       //asyn await
     } catch (error) {
       Swal.fire({
