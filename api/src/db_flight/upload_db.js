@@ -37,7 +37,7 @@ const migrar = async () => {
   //     data[`${airline}`].departureDate,
   //     data[`${airline}`].arrivalDate,
   //     data[`${airline}`].logo,
-  //     data[`${airline}`].departureHour,
+  //     data[`${airline}`].departureHour, 
   //     data[`${airline}`].arrivalHour
   //   );
   // }
