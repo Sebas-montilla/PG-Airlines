@@ -25,9 +25,9 @@ mpRouter.post('/', async (req, res) => {
     let preference = {
         items: items,
         back_urls: {
-            success: 'http://localhost:3000/success',
-            failure: 'http://localhost:3000/payment',
-            pending: 'http://localhost:3000/payment',
+            success: '/success',
+            failure: '/payment',
+            pending: '/payment',
         },
         auto_return: 'approved',
         binary_mode: true,

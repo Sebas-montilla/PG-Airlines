@@ -26,7 +26,7 @@ export default function MPPayment({ products, subTotal, user, disabled, loading 
         e.preventDefault()
 
         await axios
-        .post('http://localhost:3001/mpcheckout', products )
+        .post('/mpcheckout', products )
         .then((data)=>{
           console.log(data)
             setDatos(data.data.init_point)

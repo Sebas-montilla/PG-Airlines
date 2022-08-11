@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
-import { darkModeContext } from '../DarkModeContext';
+import { darkModeContext } from "../DarkModeContext";
 import style from "../styles/Ticket.module.css";
 import css from "../styles/Payment.module.css";
 import { Link, useHistory } from "react-router-dom";
@@ -18,7 +18,13 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 // MERCADO PAGO
 import MPPayment from "./MPPayment";
 // CREAR ORDENES
-import { createOrder, getAllUsers,deleteStockBack, createSales, getAllAirlines } from "../../redux/actions/index";
+import {
+  createOrder,
+  getAllUsers,
+  deleteStockBack,
+  createSales,
+  getAllAirlines,
+} from "../../redux/actions/index";
 
 function Payment() {
   const user = useSelector((state) => state.currentUser);
@@ -26,7 +32,7 @@ function Payment() {
 
   const { products, setProducts, setPay } = useContext(CartContext);
 
-  const { darkMode } = useContext(darkModeContext)
+  const { darkMode } = useContext(darkModeContext);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -37,7 +43,7 @@ function Payment() {
     value: null,
     string: "",
   });
-  const [/*error*/, setError] = useState(null);
+  const [, /*error*/ setError] = useState(null);
   const [disabled, setDisabled] = useState(true);
   const [succeeded, setSucceeded] = useState(false);
   const [processing, setProcessing] = useState("");
@@ -47,7 +53,7 @@ function Payment() {
 
   useEffect(() => {
     dispatch(getAllUsers());
-    dispatch(getAllAirlines())
+    dispatch(getAllAirlines());
 
     if (products.length !== 0)
       setSubTotal(
@@ -89,9 +95,9 @@ function Payment() {
               origin: e.origin,
               destination: e.destination,
               departureHour: e.departureHour,
-              arrivalHour: e.arrivalHour
-            }
-          }
+              arrivalHour: e.arrivalHour,
+            },
+          };
         }),
         userId: user.length ? user[0].id : null,
         idpurchase: details.id,
@@ -99,6 +105,8 @@ function Payment() {
       };
 
       dispatch(createOrder(sendOrderPP));
+      ejecutarArray();
+      ejecutarGuardarVenta();
 
       toast.success(`Payment Succesful ` + details.payer.name.given_name, {
         position: "bottom-left",
@@ -114,33 +122,32 @@ function Payment() {
     });
   }
 
- function ejecutarArray() {
-      let array = products.map((product)=>{
-        return {
-            id: product.id, 
-            amount: product.amount
-          };
-      })
-      dispatch(deleteStockBack(array));
+  function ejecutarArray() {
+    let array = products.map((product) => {
+      return {
+        id: product.id,
+        amount: product.amount,
+      };
+    });
+    dispatch(deleteStockBack(array));
   }
 
   function ejecutarGuardarVenta() {
-    let arr = products.map(product => {
+    let arr = products.map((product) => {
       return {
-        id: product.id, 
+        id: product.id,
         amount: product.amount,
         airlineId: product.airlineId,
-        price: product.price
-      }
-    })
-    dispatch(createSales(arr))
+        price: product.price,
+      };
+    });
+    dispatch(createSales(arr));
   }
-
 
   async function handleSubmit(e) {
     e.preventDefault();
 
-    if(email) {
+    if (email) {
       setLoading(true);
       setProcessing(true);
 
@@ -153,12 +160,12 @@ function Payment() {
         try {
           const { id } = paymentMethod;
 
-          const { data } = await axios.post("http://localhost:3001/stripe", {
+          const { data } = await axios.post("/stripe", {
             id,
             amount: subTotal * 100, // lo tengo que mandar en centavos  //1 METODO
             receipt_email: email,
           });
-          console.log(data)
+          console.log(data);
 
           const sendOrder = {
             price: subTotal,
@@ -171,19 +178,19 @@ function Payment() {
                   origin: e.origin,
                   destination: e.destination,
                   departureHour: e.departureHour,
-                  arrivalHour: e.arrivalHour
+                  arrivalHour: e.arrivalHour,
                 },
                 review: false,
-                flightId:e.id
+                flightId: e.id,
               };
             }),
-            
+
             userId: user.length ? user[0].id : 0,
             idpurchase: id,
             creationdate: new Date(),
-          }
-          console.log(sendOrder)
-            
+          };
+          console.log(sendOrder);
+
           dispatch(createOrder(sendOrder));
 
           setLoading(false);
@@ -192,11 +199,11 @@ function Payment() {
           setProcessing(false);
           elements.getElement(CardElement).clear();
           setPay(true);
-          setProducts([])             
+          setProducts([]);
 
           ejecutarArray();
           ejecutarGuardarVenta();
-       
+
           toast.success("Payment Succesful!", {
             // icon: "✈️",
             position: "bottom-left",
@@ -209,12 +216,10 @@ function Payment() {
           });
           window.localStorage.clear();
           history.replace("/success");
-
         } catch (error) {
           alert(error);
         }
       }
-      
     } else {
       Swal.fire({
         icon: "error",
@@ -243,111 +248,176 @@ function Payment() {
   }
 
   return (
-    <div className={ darkMode ? css.payment_container_dark : css.payment_container}>
-        <h1 className={ darkMode ? css.main_title_dark : css.main_title}>Checkout (
-            <Link to='/cart'>{products.length} tickets</Link>    
-        ) </h1>
+    <div
+      className={darkMode ? css.payment_container_dark : css.payment_container}
+    >
+      <h1 className={darkMode ? css.main_title_dark : css.main_title}>
+        Checkout (<Link to="/cart">{products.length} tickets</Link>){" "}
+      </h1>
 
-        {/* PAYMENT DETAIL */}
-        <h1 className={ darkMode ? css.main_title_dark : css.main_title} >Your purchase:</h1>
-      { products.length ? 
-          products.map(c => {
-            return (<div className={darkMode ? style.cards_dark : style.cards} key={c.id}>
-              <li className={ darkMode ? style.cards_item_dark : style.cards_item}>
-              <div className={ darkMode ? style.card_dark : style.card}>
-
-              <div className={style.card_image}>
-                <img src={c.logo} alt='#'/>
-              </div>
-                <div className={style.card_content}>
-                {airlines.map((airline) => {
-                  if(c.airlineId === airline.id){
-                    return <h2 key={c.airlineId} className={darkMode ? style.card_title_dark : style.card_title}>{airline.name}</h2>
-                  }
-                })}
-                <h5 className={darkMode ? style.card_desinfo_dark : style.card_desinfo}>Origin: {c.origin} | Destination: {c.destination} </h5>
-                <p className={darkMode ? style.card_text_dark : style.card_text} >{c.departureHour} / {c.arrivalHour}</p>
+      {/* PAYMENT DETAIL */}
+      <h1 className={darkMode ? css.main_title_dark : css.main_title}>
+        Your purchase:
+      </h1>
+      {products.length ? (
+        products.map((c) => {
+          return (
+            <div
+              className={darkMode ? style.cards_dark : style.cards}
+              key={c.id}
+            >
+              <li
+                className={darkMode ? style.cards_item_dark : style.cards_item}
+              >
+                <div className={darkMode ? style.card_dark : style.card}>
+                  <div className={style.card_image}>
+                    <img src={c.logo} alt="#" />
+                  </div>
+                  <div className={style.card_content}>
+                    {airlines.map((airline) => {
+                      if (c.airlineId === airline.id) {
+                        return (
+                          <h2
+                            key={c.airlineId}
+                            className={
+                              darkMode
+                                ? style.card_title_dark
+                                : style.card_title
+                            }
+                          >
+                            {airline.name}
+                          </h2>
+                        );
+                      }
+                    })}
+                    <h5
+                      className={
+                        darkMode ? style.card_desinfo_dark : style.card_desinfo
+                      }
+                    >
+                      Origin: {c.origin} | Destination: {c.destination}{" "}
+                    </h5>
+                    <p
+                      className={
+                        darkMode ? style.card_text_dark : style.card_text
+                      }
+                    >
+                      {c.departureHour} / {c.arrivalHour}
+                    </p>
+                  </div>
+                  <div>
+                    <p
+                      className={
+                        darkMode ? style.card_text_dark : style.card_text
+                      }
+                    >
+                      ${c.price}
+                    </p>
+                  </div>
+                  <h5
+                    className={
+                      darkMode ? style.card_text_dark : style.card_text
+                    }
+                  >
+                    Amount: {c.amount}
+                  </h5>
                 </div>
-                <div>
-                <p className={darkMode ? style.card_text_dark : style.card_text}>${c.price}</p>
-                </div>
-                <h5 className={darkMode ? style.card_text_dark : style.card_text}>Amount: {c.amount}</h5>
-            </div>
-            </li>
+              </li>
             </div>
           );
-        }) : <></>
-      }
+        })
+      ) : (
+        <></>
+      )}
 
       <div className={css.methods}>
         {/* PAYMENT METHOD */}
-        <h1 className={ darkMode ? css.main_title_dark : css.main_title}>Payment Method</h1>
+        <h1 className={darkMode ? css.main_title_dark : css.main_title}>
+          Payment Method
+        </h1>
         <br />
-            <div>
-                <h5 className={ darkMode ? css.main_title_dark : css.main_title}>Order Total:</h5>{ subTotal && <span className={ darkMode ? css.main_title_dark : css.main_title}>${subTotal}</span>}
-            </div>
-            <br />
+        <div>
+          <h5 className={darkMode ? css.main_title_dark : css.main_title}>
+            Order Total:
+          </h5>
+          {subTotal && (
+            <span className={darkMode ? css.main_title_dark : css.main_title}>
+              ${subTotal}
+            </span>
+          )}
+        </div>
+        <br />
 
-            {/* MERCADO PAGO */}
-            {/* <hr className={css.hr_separator} />
+        {/* MERCADO PAGO */}
+        {/* <hr className={css.hr_separator} />
             <br />
             <MPPayment loading={loading} disabled={disabled} subTotal={subTotal} products={products} user={user} />
             <br />
             <hr className={css.hr_separator} /> */}
-            {/* PAYPAL */}
-            <br />
-            <PayPalScriptProvider 
-            options={{ "client-id": 'Af5RBL-IS1S6n_djlUuVWC-SSHDEWJDfTMVCyBPAJBISiKn6lgZmNmLX9D5KvBhWZ38jY_2Sy3ExLLQN'}}>
-                <PayPalButtons
-                disabled={loading || !disabled}
-                createOrder={createOrderPayPal}
-                onApprove={onApprove}
-                />            
-            </PayPalScriptProvider>
-            <br />
-            <hr className={css.hr_separator} />
-            <br />
-            {/* STRIPE */}
-            <form className={css.form_container}>
-                <br />
-                <div className={darkMode ? css.card_form : undefined}>
-                  <br />
-                  <div>
-                    <TextField 
-                    id="outlined-size-small"
-                    color="primary"
-                    focused 
-                    label='Email'
-                    type="email" 
-                    value={email} 
-                    name='email'
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                    />
-                    <br />                  
-                  </div>
-
-                  <CardElement onChange={handleChange}/> 
-                  <br />
-                </div>
-
-                <br />
-                <LoadingButton
-                    onClick={handleSubmit}
-                    endIcon='✔'
-                    loading={loading}
-                    loadingPosition="end"
-                    variant="contained"
-                    color='primary'
-                    className={darkMode ? css.btnLoading : undefined}
-                    disabled={processing || disabled || succeeded || errorMsg.value}
-                    ><span>{loading ? <p>Processing</p> : 'Buy now'}</span></LoadingButton>
-
-                <br />
-                {errorMsg.string && <span className={darkMode ? css.msg_error_dark : css.msg_error} >{errorMsg.string}</span>}
-            </form>            
-        </div>
+        {/* PAYPAL */}
         <br />
+        <PayPalScriptProvider
+          options={{
+            "client-id":
+              "Af5RBL-IS1S6n_djlUuVWC-SSHDEWJDfTMVCyBPAJBISiKn6lgZmNmLX9D5KvBhWZ38jY_2Sy3ExLLQN",
+          }}
+        >
+          <PayPalButtons
+            disabled={loading || !disabled}
+            createOrder={createOrderPayPal}
+            onApprove={onApprove}
+          />
+        </PayPalScriptProvider>
+        <br />
+        <hr className={css.hr_separator} />
+        <br />
+        {/* STRIPE */}
+        <form className={css.form_container}>
+          <br />
+          <div className={darkMode ? css.card_form : undefined}>
+            <br />
+            <div>
+              <TextField
+                id="outlined-size-small"
+                color="primary"
+                focused
+                label="Email"
+                type="email"
+                value={email}
+                name="email"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <br />
+            </div>
+
+            <CardElement onChange={handleChange} />
+            <br />
+          </div>
+
+          <br />
+          <LoadingButton
+            onClick={handleSubmit}
+            endIcon="✔"
+            loading={loading}
+            loadingPosition="end"
+            variant="contained"
+            color="primary"
+            className={darkMode ? css.btnLoading : undefined}
+            disabled={processing || disabled || succeeded || errorMsg.value}
+          >
+            <span>{loading ? <p>Processing</p> : "Buy now"}</span>
+          </LoadingButton>
+
+          <br />
+          {errorMsg.string && (
+            <span className={darkMode ? css.msg_error_dark : css.msg_error}>
+              {errorMsg.string}
+            </span>
+          )}
+        </form>
+      </div>
+      <br />
     </div>
   );
 }

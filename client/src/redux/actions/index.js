@@ -44,7 +44,7 @@ export const GET_ALL_USER_FIREBASE = "GET_ALL_USER_FIREBASE";
 
 export const getAllFlights = () => {
   return function (dispatch) {
-    axios("http://localhost:3001/flights").then((flight) => {
+    axios("/flights").then((flight) => {
       dispatch({
         type: GET_ALL_FLIGHTS,
         payload: flight.data,
@@ -55,7 +55,7 @@ export const getAllFlights = () => {
 
 export const getAllAirlines = () => {
   return function (dispatch) {
-    axios("http://localhost:3001/airlines").then((airline) => {
+    axios("/airlines").then((airline) => {
       dispatch({
         type: GET_ALL_AIRLINES,
         payload: airline.data,
@@ -74,7 +74,7 @@ export function getFlightInfo(payload) {
 
 export function getFlightByID(id) {
   return function (dispatch) {
-    axios(`http://localhost:3001/flights`).then((flight) => {
+    axios(`/flights`).then((flight) => {
       dispatch({
         type: GET_FLIGHT_BY_ID,
         payload: flight.data.find((e) => e.id === id),
@@ -85,7 +85,7 @@ export function getFlightByID(id) {
 
 export function getAllUsers() {
   return function (dispatch) {
-    axios(`http://localhost:3001/user`)
+    axios(`/user`)
       .then((res) => {
         dispatch({
           type: GET_USERS,
@@ -99,7 +99,7 @@ export function getAllUsers() {
 }
 export function getAllUsersFirebase() {
   return function (dispatch) {
-    axios(`http://localhost:3001/user/firebase`)
+    axios(`/user/firebase`)
       .then((res) => {
         dispatch({
           type: GET_ALL_USER_FIREBASE,
@@ -114,7 +114,7 @@ export function getAllUsersFirebase() {
 
 export function getSales() {
   return function (dispatch) {
-    axios(`http://localhost:3001/sales`)
+    axios(`/sales`)
       .then((res) => {
         dispatch({
           type: GET_ALL_SALES,
@@ -199,7 +199,7 @@ export function deleteFromCart(payload) {
 
 export function crearAerolinea(payload) {
   return function (dispatch) {
-    axios.post("http://localhost:3001/airlines", payload).then((response) => {
+    axios.post("/airlines", payload).then((response) => {
       dispatch({
         type: CREATE_AIRLINE,
         payload: response.payload,
@@ -210,7 +210,7 @@ export function crearAerolinea(payload) {
 export function deleteAirline(payload) {
   return function(dispatch) {
     axios
-      .delete(`http://localhost:3001/airlines/delete/${payload}`)
+      .delete(`/airlines/delete/${payload}`)
       .then((res) => {
         console.log("se borro la empresa perro")
         dispatch({
@@ -228,7 +228,7 @@ export function deleteAirline(payload) {
 export function createUser(payload) {
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/user/create", payload)
+      .post("/user/create", payload)
       .then((response) => {
         dispatch({
           type: CREATE_USER,
@@ -253,7 +253,7 @@ export function currentUser(payload) {
 
 export function makeAdminPostgres(payload) {
   return function (dispatch) {
-    axios.put("http://localhost:3001/user/update", payload)
+    axios.put("/user/update", payload)
     .then((response) => {
       dispatch({
         type: UPDATE_USER,
@@ -265,7 +265,7 @@ export function makeAdminPostgres(payload) {
 export function deleteUser(payload) {
   return function (dispatch) {
     axios
-      .delete(`http://localhost:3001/user/delete/${payload}`)
+      .delete(`/user/delete/${payload}`)
       .then((response) => {
         dispatch({
           type: DELETE_USER,
@@ -280,7 +280,7 @@ export function deleteUser(payload) {
 export function deleteUserAuth(payload) {
   return function () {
     axios
-      .delete(`http://localhost:3001/user/auth/${payload}`)
+      .delete(`/user/auth/${payload}`)
       .then(() => {
         console.log("user auth firebase eliminated");
       })
@@ -315,7 +315,7 @@ export function deleteFavorite(payload) {
 export function createOrder(payload) {
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/orders", payload)
+      .post("/orders", payload)
       .then((res) => {
         dispatch({
           type: CREATE_ORDER,
@@ -328,7 +328,7 @@ export function createOrder(payload) {
 
 export function getOrders() {
   return function (dispatch) {
-    axios.get("http://localhost:3001/orders").then((res) => {
+    axios.get("/orders").then((res) => {
       dispatch({
         type: GET_ORDERS,
         payload: res.data,
@@ -344,7 +344,7 @@ export function editToFlights(payload) {
   console.log(flight);
   return function (dispatch) {
     axios
-      .put("http://localhost:3001/flights/update", flight)
+      .put("/flights/update", flight)
       .then((response) => {
         dispatch({
           type: UPDATE_FLIGHTS,
@@ -358,7 +358,7 @@ export function deleteStockBack(payload) {
     flightIdAmount: payload,
   };
   return function (dispatch) {
-      axios.put("http://localhost:3001/flights/stock", flightIdAmount)
+      axios.put("/flights/stock", flightIdAmount)
       .then((res) => {
         console.log("todookey");
         dispatch({
@@ -379,7 +379,7 @@ export function createFlights(payload) {
   //console.log(payload);
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/flights/create", flight)
+      .post("/flights/create", flight)
       .then((response) => {
         dispatch({
           type: CREATER_FLIGHTS,
@@ -394,7 +394,7 @@ export function deleteFlights(payload) {
   //console.log(flightIds);
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/flights/delete", flightIds)
+      .post("/flights/delete", flightIds)
       .then((response) => {
         dispatch({
           type: DELETE_FLIGHTS,
@@ -407,7 +407,7 @@ export function deleteFlights(payload) {
 export function getAllComments() {
   return function (dispatch) {
      axios
-      .get("http://localhost:3001/comments")
+      .get("/comments")
       .then((res) => {
         dispatch({
           type: GET_COMMENTS,
@@ -425,7 +425,7 @@ export function createComment(payload) {
   console.log("este es el payload papi",payload);
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/comments", payload)
+      .post("/comments", payload)
       .then((res) => {
         dispatch({
           type: CREATE_COMMENT,
@@ -442,7 +442,7 @@ export function createSales(payload) {
   }
   return function (dispatch) {
     axios
-      .post("http://localhost:3001/sales", sales)
+      .post("/sales", sales)
       .then((res) => {
         console.log("se creó la venta");
         dispatch({
@@ -459,7 +459,7 @@ export function createSales(payload) {
 
 export function resetPassword(email) {
   return function(dispatch) {
-      axios.post(`http://localhost:3001/user/resetPassword/${email}`)
+      axios.post(`/user/resetPassword/${email}`)
       .then((res) => {
         console.log( "se reseteo la password")
         dispatch({
@@ -477,7 +477,7 @@ export function updateReview(payload) {
   //console.log("esto es el payload de revie",payload)
   
   return function (dispatch) {
-    axios.put(`http://localhost:3001/comments`, payload)
+    axios.put(`/comments`, payload)
     .then(res => {
       console.log('todo tranqui')
       dispatch({
@@ -491,7 +491,7 @@ export function updateReview(payload) {
 
 export function verifyEmail(payload){
   return function(dispatch) {
-    axios.put("http://localhost:3001/user/verificateEmail",payload)
+    axios.put("/user/verificateEmail",payload)
     .then((res) => {
       console.log( "esta verificado pa")
       dispatch({
@@ -507,7 +507,7 @@ export function verifyEmail(payload){
 export function disableUser(payload) {
   return function () {
     axios
-      .put("http://localhost:3001/user/disableUser",payload)
+      .put("/user/disableUser",payload)
       .then(() => {
         console.log("user auth firebase disable");
       })
