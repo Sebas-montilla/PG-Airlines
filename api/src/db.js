@@ -14,7 +14,7 @@ const path = require("path");
 
 // ------------------------- CONFIG POSTGRES DEPLOY
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, PORT } = process.env;
 let sequelize =
   process.env.NODE_ENV === "production"
     ? new Sequelize({
